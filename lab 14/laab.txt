@@ -1,0 +1,104 @@
+Code	 Main.java
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        StudentService service = new StudentService();
+
+        while (true) {
+            System.out.println("\n1. Add Student");
+            System.out.println("2. Show Count");
+            System.out.println("3. Exit");
+            System.out.print("Enter choice: ");
+
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            if (choice == 1) {
+                System.out.print("Enter name: ");
+                String name = sc.nextLine();
+                service.addStudent(name);
+                System.out.println("Student added.");
+            } else if (choice == 2) {
+                System.out.println("Total students: "
+                        + service.getCount());
+            } else if (choice == 3) {
+                break;
+            } else {
+                System.out.println("Invalid choice");
+            }
+        }
+
+        sc.close();
+    }
+}
+
+Student.java
+
+public class Student {
+    private String name;
+
+    public Student(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+StudentService.java
+
+import java.util.ArrayList;
+
+public class StudentService {
+    private ArrayList<Student> students = new ArrayList<>();
+
+    public void addStudent(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid name");
+        }
+
+        students.add(new Student(name));
+    }
+
+    public int getCount() {
+        return students.size();
+    }
+}
+
+StudentServicetest.java
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class StudentServiceTest {
+
+    @Test
+    void testAddStudent() {
+        StudentService service = new StudentService();
+
+        service.addStudent("Rahul");
+
+        assertEquals(1, service.getCount());
+    }
+
+    @Test
+    void testAddTwoStudents() {
+        StudentService service = new StudentService();
+
+        service.addStudent("Rahul");
+        service.addStudent("Amit");
+
+        assertEquals(2, service.getCount());
+    }
+
+    @Test
+    void testInvalidName() {
+        StudentService service = new StudentService();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.addStudent(""));
+    }
+}
